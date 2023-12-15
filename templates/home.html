@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 400px;}
+    </style>
+    <!-- ... -->
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <!-- ... -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.css">
+    <title>Home</title>
+</head>
+<body>
+    <!-- ... -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.js"></script>
+    <div id="fullpage">
+        <div class="section">
+            <div class="slide"> 
+                <h1>Latest Activity: <a href="https://www.strava.com/activities/{{ activity.id }}">{{ activity.name }}</a></h1>
+                <p>Distance: {{ activity.distance }} km</p>
+                <p>Average Speed: {{ activity.average_speed }} kp/h </p>
+            </div>
+            
+            <div class="slide"> 
+                <h1>Longest Activity: <a href="https://www.strava.com/activities/{{ longest_activity.id }}">{{ longest_activity.name }}</a></h1>
+                <p>Distance: {{ longest_activity.distance }} km </p>
+                <p>Average Speed: {{ longest_activity.average_speed }} kp/h </p> 
+            </div>
+
+            <div class="slide"> 
+                <h1>Most KM ridden in <a href="https://www.strava.com/athlete/calendar#{{ months }}">{{ most_km_month}}: {{ most_km }} KM</a></h1>
+            </div>
+            <div 
+                id="map" class="slide">
+            </div>
+            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+            <script>
+                // Your Leaflet map initialization code goes here
+                var map = L.map('map').setView([51.505, -0.09], 10);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                    maxZoom: 18,
+                }).addTo(map);
+            // create a red polyline from an array of LatLng points
+                var latlngs = {{ decoded_polyline | tojson | safe }};
+
+                var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+
+                // zoom the map to the polyline
+                map.fitBounds(polyline.getBounds());
+            </script>
+        </div>
+    
+    <script>
+        new fullpage('#fullpage', {
+            autoScrolling: true,
+            scrollHorizontally: true,
+            navigation: false
+        });
+    </script>
+</body>
+</html>

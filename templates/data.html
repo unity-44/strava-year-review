@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Distance</th>
+                <th>Average Speed</th>
+            </tr>
+            {% for activity in data %}
+            <tr>
+                <td>{{ activity.name }}</td>
+                <td>{{ activity.distance }}</td>
+                <td>{{ activity.average_speed }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
